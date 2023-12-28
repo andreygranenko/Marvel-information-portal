@@ -21,6 +21,14 @@ class MarvelService {
         return this._transformCharacter(res.data.results[0]);
     }
 
+    static onImageNotFound = (obj) => {
+        if (obj.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+            return {objectFit: "contain"};
+        } else {
+            return null;
+        }
+    }
+
     _transformCharacter = (char) => {
         return {
             name: char.name,
