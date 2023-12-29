@@ -29,7 +29,6 @@ class CharInfo extends Component {
             return;
         }
         this.onCharLoading();
-
         this.marvelService
             .getCharacter(charId)
             .then(this.onCharLoaded)
