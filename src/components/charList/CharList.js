@@ -20,7 +20,9 @@ class CharList extends Component {
         const characters = res.map(char => {
             const imgStyle = marvelService.onImageNotFound(char);
             return (
-                <li className="char__item">
+                <li className="char__item"
+                    key={char.id}
+                    onClick={() => this.props.onCharSelected(char.id)}>
                     <img style={imgStyle} src={char.thumbnail} alt="abyss"/>
                     <div className="char__name">{char.name}</div>
                 </li>
@@ -36,7 +38,7 @@ class CharList extends Component {
         return (
             <div className="char__list">
                 <ul className="char__grid">
-                    {characters.map(item => item)}
+                    {characters}
                 </ul>
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
