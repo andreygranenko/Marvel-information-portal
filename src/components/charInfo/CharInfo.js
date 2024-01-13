@@ -78,8 +78,9 @@ class CharInfo extends Component {
 }
 
 const View = ({char}) => {
+    const marvelServices = new MarvelService();
     const {name, description, thumbnail, homepage, wiki, comics} = char;
-    const imgStyle = marvelService.onImageNotFound(char);
+    const imgStyle = marvelServices.onImageNotFound(char);
     const newComics = (comics && comics.length > 10) ? comics.slice(0, 10) : ['There are no comics for character'];
     return (
         <>

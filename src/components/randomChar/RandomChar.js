@@ -14,6 +14,7 @@ class RandomChar extends Component {
         error: false
     }
 
+
     componentDidMount() {
         this.updateChar();
     }
@@ -59,8 +60,9 @@ class RandomChar extends Component {
     }
 
     render() {
+        const marvelServices = new MarvelService();
         const {char, loading, error} = this.state;
-        const imgStyle = marvelService.onImageNotFound(char);
+        const imgStyle = marvelServices.onImageNotFound(char);
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? <View char={char} imgStyle={imgStyle}/> : null;
