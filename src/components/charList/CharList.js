@@ -13,7 +13,7 @@ const CharList = (props) => {
 
     // myRef = React.createRef()
 
-    const refsObj = {};
+    const refsObj = useRef({});
 
     const [characters, setChar] = useState([]);
     const [newItemLoading, setItemLoad] = useState(false);
@@ -40,19 +40,17 @@ const CharList = (props) => {
 
     const setRef = elem => {
         // const myRef = elem;
-        refsObj[elem.textContent] = elem;
-        console.dir(refsObj);
-        console.log(elem.textContent)
+        refsObj.current[elem.textContent] = elem;
     }
 
     const focusItem = (name) => {
-        Object.keys(refsObj).forEach(item => {
-            let clazz = refsObj[item].className;
+        Object.keys(refsObj.current).forEach(item => {
+            let clazz = refsObj.current[item].className;
             if (clazz.indexOf('char__item_selected') !== -1) {
-                refsObj[item].className = clazz.slice(0, clazz.indexOf('char__item_selected'));
+                refsObj.current[item].className = clazz.slice(0, clazz.indexOf('char__item_selected'));
             }
         })
-        refsObj[name].className += ' char__item_selected';
+        refsObj.current[name].className += ' char__item_selected';
     }
 
     const loadAllChar = (res) => {
@@ -60,6 +58,7 @@ const CharList = (props) => {
             const imgStyle = marvelService.onImageNotFound(char);
             return (
                 <li className="char__item"
+                    tabIndex={0}
                     ref={setRef}
                     key={char.id}
                     onClick={() => {
