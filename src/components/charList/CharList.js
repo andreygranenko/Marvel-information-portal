@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 
 import MarvelService from "../../services/MarvelService";
 import marvelService from "../../services/MarvelService";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import Spinner from "../spinner/Spinner";
 
 const CharList = (props) => {
 
@@ -14,7 +16,8 @@ const CharList = (props) => {
     // myRef = React.createRef()
 
     const refsObj = useRef({});
-
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [characters, setChar] = useState([]);
     const [newItemLoading, setItemLoad] = useState(false);
     const [offset, setOffset] = useState(210);
@@ -31,6 +34,7 @@ const CharList = (props) => {
         onCharListLoading();
         marvelService.getAllCharacters(offset)
             .then(loadAllChar)
+            .catch(onError)
     }
 
     const onCharListLoading = () => {
@@ -41,6 +45,11 @@ const CharList = (props) => {
     const setRef = elem => {
         // const myRef = elem;
         refsObj.current[elem.textContent] = elem;
+    }
+
+    const onError = () => {
+        setLoading(false);
+        setError(true);
     }
 
     const focusItem = (name) => {
@@ -80,23 +89,36 @@ const CharList = (props) => {
         setItemLoad(false);
         setOffset(offset => offset + 9);
         setCharEnd(ended);
+        setLoading(false);
+        setError(false);
     }
 
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    if (!(loading || error)) {
+        return (
+            <div className="char__list">
+                <ul className="char__grid">
+                    {characters.map(item => item)}
+                </ul>
+                <button
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    style={{display: charEnded ? 'none' : 'block'}}
+                    onClick={() => onRequest(offset)}>
+                    <div className="inner">load more</div>
+                </button>
+            </div>
+        )
+    } else {
+        return (
+            <>
+                {errorMessage}
+                {spinner}
+            </>
+        )
+    }
 
-    return (
-        <div className="char__list">
-            <ul className="char__grid">
-                {characters.map(item => item)}
-            </ul>
-            <button
-                className="button button__main button__long"
-                disabled={newItemLoading}
-                style={{display: charEnded ? 'none' : 'block'}}
-                onClick={() => onRequest(offset)}>
-                <div className="inner">load more</div>
-            </button>
-        </div>
-    )
 
 
 
