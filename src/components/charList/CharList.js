@@ -2,10 +2,10 @@ import './charList.scss';
 import {useState, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 
-import MarvelService from "../../services/MarvelService";
-import marvelService from "../../services/MarvelService";
+
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
+import useMarvelService from "../../services/MarvelService";
 
 const CharList = (props) => {
 
@@ -16,41 +16,33 @@ const CharList = (props) => {
     // myRef = React.createRef()
 
     const refsObj = useRef({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [characters, setChar] = useState([]);
     const [newItemLoading, setItemLoad] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnd] = useState(false);
 
 
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters, onImageNotFound} = useMarvelService();
 
     useEffect(() => {
-        onRequest();
+        onRequest(offset, true);
     }, []);
 
-    const onRequest = (offset) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(offset)
+    const onRequest = (offset, initial) => {
+        initial ? setItemLoad(false) : setItemLoad(true);
+        getAllCharacters(offset)
             .then(loadAllChar)
-            .catch(onError)
     }
 
-    const onCharListLoading = () => {
-        setItemLoad(true);
-    }
 
 
     const setRef = elem => {
         // const myRef = elem;
-        refsObj.current[elem.textContent] = elem;
+        if (elem) {
+            refsObj.current[elem.textContent] = elem;
+        }
     }
 
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    }
 
     const focusItem = (name) => {
         Object.keys(refsObj.current).forEach(item => {
@@ -64,7 +56,7 @@ const CharList = (props) => {
 
     const loadAllChar = (res) => {
         const newCharacters = res.map(char => {
-            const imgStyle = marvelService.onImageNotFound(char);
+            const imgStyle = onImageNotFound(char);
             return (
                 <li className="char__item"
                     tabIndex={0}
@@ -89,15 +81,14 @@ const CharList = (props) => {
         setItemLoad(false);
         setOffset(offset => offset + 9);
         setCharEnd(ended);
-        setLoading(false);
-        setError(false);
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    if (!(loading || error)) {
+    const spinner = loading  && !newItemLoading ? <Spinner/> : null;
         return (
             <div className="char__list">
+                {errorMessage}
+                {spinner}
                 <ul className="char__grid">
                     {characters.map(item => item)}
                 </ul>
@@ -110,17 +101,6 @@ const CharList = (props) => {
                 </button>
             </div>
         )
-    } else {
-        return (
-            <>
-                {errorMessage}
-                {spinner}
-            </>
-        )
-    }
-
-
-
 
 }
 

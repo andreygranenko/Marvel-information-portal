@@ -6,42 +6,31 @@ import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import marvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 const RandomChar = () => {
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+
 
     useEffect(() => {
         updateChar();
     }, []);
 
 
-    const marvelService = new MarvelService();
+    const {loading, error, getCharacter, onImageNotFound, clearError} = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-        setError(false);
     }
 
-    const onCharLoading = () => {
-        setLoading(true);
-    }
 
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    }
 
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         // console.log(id);
-        onCharLoading();
-        marvelService
-            .getCharacter(id)
+        getCharacter(id)
             .then(onCharLoaded)
-            .catch(onError)
     }
 
 
@@ -51,11 +40,11 @@ const RandomChar = () => {
         }
     }
 
-    const marvelServices = new MarvelService();
-    const imgStyle = char ? marvelServices.onImageNotFound(char) : null;
+    const imgStyle = char ? onImageNotFound(char) : null;
+    console.log(error, loading)
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? <View char={char} imgStyle={imgStyle} stringLenCheck={stringLenCheck}/> : null;
+    const content = !(loading || error) && char ? <View char={char} imgStyle={imgStyle} stringLenCheck={stringLenCheck}/> : null;
 
     return (
         <div className="randomchar">
