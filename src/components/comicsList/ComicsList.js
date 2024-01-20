@@ -1,6 +1,4 @@
 import './comicsList.scss';
-import uw from '../../resources/img/UW.png';
-import xMen from '../../resources/img/x-men.png';
 import {useEffect, useState} from "react";
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -50,7 +48,7 @@ const ComicsList = () => {
 
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading && !newItemLoading ? <Spinner/> : null;
-
+    console.log('test');
     return (
         <div className="comics__list">
             {spinner}
