@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
+import {Link} from "react-router-dom";
 
 const ComicsList = () => {
     const [comics, setComics] = useState([]);
@@ -27,11 +28,11 @@ const ComicsList = () => {
                 <li className="comics__item"
                     tabIndex={0}
                     key={comics.id}>
-                    <a href={comics.url}>
+                    <Link to={`/comics/${comics.id}`}>
                         <img src={comics.thumbnail} alt={comics.title} className="comics__item-img"/>
                         <div className="comics__item-name">{comics.title}</div>
                         <div className="comics__item-price">{comics.price}$</div>
-                    </a>
+                    </Link>
                 </li>
             )
         });
