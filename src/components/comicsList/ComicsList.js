@@ -23,11 +23,11 @@ const ComicsList = () => {
     }
 
     const loadAllComics = res => {
-        const newComics = res.map(comics => {
+        const newComics = res.map((comics, i) => {
             return (
                 <li className="comics__item"
                     tabIndex={0}
-                    key={comics.id}>
+                    key={i}>
                     <Link to={`/comics/${comics.id}`}>
                         <img src={comics.thumbnail} alt={comics.title} className="comics__item-img"/>
                         <div className="comics__item-name">{comics.title}</div>

@@ -55,13 +55,13 @@ const CharList = (props) => {
     }
 
     const loadAllChar = (res) => {
-        const newCharacters = res.map(char => {
+        const newCharacters = res.map((char, i) => {
             const imgStyle = onImageNotFound(char);
             return (
                 <li className="char__item"
                     tabIndex={0}
                     ref={setRef}
-                    key={char.id}
+                    key={i}
                     onClick={() => {
                         props.onCharSelected(char.id);
                         focusItem(char.name);
@@ -85,6 +85,7 @@ const CharList = (props) => {
 
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading  && !newItemLoading ? <Spinner/> : null;
+    console.log(characters);
         return (
             <div className="char__list">
                 {errorMessage}
