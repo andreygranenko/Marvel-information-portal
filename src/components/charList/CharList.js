@@ -54,7 +54,8 @@ const CharList = (props) => {
         refsObj.current[name].className += ' char__item_selected';
     }
 
-    const loadAllChar = (res) => {
+    const loadAllChar =  (res) => {
+
         const newCharacters = res.map((char, i) => {
             const imgStyle = onImageNotFound(char);
             return (
@@ -85,7 +86,6 @@ const CharList = (props) => {
 
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading  && !newItemLoading ? <Spinner/> : null;
-    console.log(characters);
         return (
             <div className="char__list">
                 {errorMessage}

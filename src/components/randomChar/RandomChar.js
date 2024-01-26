@@ -2,10 +2,8 @@ import {useEffect, useState} from "react";
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-import marvelService from "../../services/MarvelService";
 import useMarvelService from "../../services/MarvelService";
 
 const RandomChar = () => {
@@ -41,7 +39,6 @@ const RandomChar = () => {
     }
 
     const imgStyle = char ? onImageNotFound(char) : null;
-    console.log(error, loading)
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
     const content = !(loading || error) && char ? <View char={char} imgStyle={imgStyle} stringLenCheck={stringLenCheck}/> : null;
