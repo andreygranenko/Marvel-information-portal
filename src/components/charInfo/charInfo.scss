@@ -49,9 +49,9 @@
         }
         &-item {
             width: 100%;
-            padding: 0px 10px;
+            padding: 0 10px;
             line-height: 25px;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
             margin-top: 10px;
         }
     }
@@ -62,4 +62,22 @@
         text-align: center;
     }
 
+}
+
+.test-enter {
+    opacity: 0;
+}
+
+.test-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+
+.test-exit {
+    opacity: 1;
+}
+
+.test-exit-active {
+    opacity: 0;
+    transition: opacity 300ms ease-in;
 }

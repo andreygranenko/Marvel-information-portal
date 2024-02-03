@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 
 const CharList = (props) => {
 
@@ -90,9 +91,19 @@ const CharList = (props) => {
             <div className="char__list">
                 {errorMessage}
                 {spinner}
-                <ul className="char__grid">
-                    {characters.map(item => item)}
-                </ul>
+                <TransitionGroup component={'ul'} className={"char__grid"}>
+                    {characters.map((item, i) => (
+                        <CSSTransition
+                            classNames={'char__item'}
+                            timeout={300}
+                            key={i}>
+                            {item}
+                        </CSSTransition>
+                    ))}
+                </TransitionGroup>
+                {/*<ul className="char__grid">*/}
+
+                {/*</ul>*/}
                 <button
                     className="button button__main button__long"
                     disabled={newItemLoading}
