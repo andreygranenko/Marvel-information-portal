@@ -14,10 +14,12 @@
     "react-router-dom": "^6.21.3",
     "react-scripts": "4.0.3",
     "react-transition-group": "^4.4.5",
+    "serve": "^14.2.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start-dev": "react-scripts --openssl-legacy-provider start",
+    "start": "serve -s build",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
