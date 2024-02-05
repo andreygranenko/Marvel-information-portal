@@ -46,21 +46,10 @@ const CharInfo = (props) => {
     return (
 
             <div className="char__info">
-                <TransitionGroup>
-                    <CSSTransition key={'skeleton'}
-                        timeout={700}>
-                        {skeleton}
-                    </CSSTransition>
-                    <CSSTransition
-                        key={'content'}
-                        timeout={700}
-                        classNames={"test"}>
-                        {content}
-                    </CSSTransition>
+                    {skeleton}
+                    {content}
                     {errorMessage}
                     {spinner}
-
-                </TransitionGroup>
             </div>
     )
 
@@ -72,7 +61,7 @@ const View = ({char, ini}) => {
     const imgStyle = onImageNotFound(char);
     const newComics = (comics && comics.length > 10) ? comics.slice(0, 10) : ['There are no comics for character'];
     return (
-            <div className={'test'}>
+            <div >
                 <div className="char__basics">
                     <img style={imgStyle} src={thumbnail} alt={name} />
                     <div>

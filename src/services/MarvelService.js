@@ -1,6 +1,6 @@
 import {useHttp} from "../hooks/http.hook";
 
-const  useMarvelService = () => {
+const useMarvelService = () => {
     const {loading, request, error, clearError} = useHttp();
 
 
@@ -16,6 +16,11 @@ const  useMarvelService = () => {
 
     const getCharacter = async (id) => {
         const res =  await request(`${_apiBase}characters/${id}?&${_apiKey}`);
+        return _transformCharacter(res.data.results[0]);
+    }
+
+    const getCharacterByName = async (name) => {
+        const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
         return _transformCharacter(res.data.results[0]);
     }
 
@@ -69,7 +74,7 @@ const  useMarvelService = () => {
             url: comics.urls[0].url
         }
     }
-    return {loading, error, getCharacter, getAllCharacters, onImageNotFound, getAllComics, clearError, getComics};
+    return {loading, error, getCharacter, getAllCharacters, onImageNotFound, getAllComics, clearError, getComics, getCharacterByName};
 }
 export default useMarvelService;
 

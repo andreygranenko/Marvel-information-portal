@@ -4,6 +4,7 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import decoration from "../../resources/img/vision.png";
 import {useState} from "react";
+import CharSearch from "../charSearch/CharSearch";
 
 const MainPage = () => {
 
@@ -25,6 +26,7 @@ const MainPage = () => {
                 <ErrorBoundary>
                     <CharInfo charId={selectedChar}/>
                 </ErrorBoundary>
+                <CharSearch/>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision"/>
         </>
