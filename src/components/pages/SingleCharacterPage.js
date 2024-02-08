@@ -6,6 +6,7 @@ import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import AppBanner from "../appBanner/AppBanner";
+import {Helmet} from "react-helmet";
 
 const SingleCharacterPage = () => {
   const {charId} = useParams();
@@ -42,6 +43,13 @@ const View = ({character}) => {
   const {name, description, thumbnail} = character;
   return (
     <>
+      <Helmet>
+        <meta
+          name="description"
+          content="Character page"
+        />
+        <title>{name} character page</title>
+      </Helmet>
       <AppBanner/>
       <div className="single-char">
         <img src={thumbnail} alt={name} className="single-char__img"/>
