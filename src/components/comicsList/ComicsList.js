@@ -46,7 +46,7 @@ const ComicsList = () => {
         setOffset(offset => offset + 8);
         setComicsEnd(ended);
     }
-
+    
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading && !newItemLoading ? <Spinner/> : null;
     console.log('test');

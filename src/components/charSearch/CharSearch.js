@@ -2,6 +2,7 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import './charSearch.sass';
 import useMarvelService from "../../services/MarvelService";
 import {useState} from "react";
+import {Link} from "react-router-dom";
 
 const validate = values => {
   const errors = {};
@@ -26,14 +27,14 @@ const CharSearch = () => {
     setChar(
       <div className={'found'}>
         There is! Visit {res.name} page?
-        <a href={res.homepage} className="button button__main">
+        <Link to={`/characters/${res.id}`} className="button button__main">
           <div className="inner">TO PAGE</div>
-        </a>
+        </Link>
       </div>
     )
   }
 
-  const handleError = res => {
+  const handleError = (res) => {
     setChar(
       <div className="not_found">
         The character was not found. Check the name and try again
