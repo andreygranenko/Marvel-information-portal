@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 const ComicsList = () => {
     const [comics, setComics] = useState([]);
     const [newItemLoading, setItemLoad] = useState(false);
-    const [offset, setOffset] = useState(210);
+    const [offset, setOffset] = useState(50);
     const [comicsEnded, setComicsEnd] = useState(false);
     const {loading, error, getAllComics} = useMarvelService();
 
@@ -18,7 +18,7 @@ const ComicsList = () => {
 
     const onRequest = (offset, initial) => {
         initial ? setItemLoad(false) : setItemLoad(true);
-        getAllComics()
+        getAllComics(offset)
             .then(loadAllComics)
     }
 
@@ -45,6 +45,7 @@ const ComicsList = () => {
         setItemLoad(false);
         setOffset(offset => offset + 8);
         setComicsEnd(ended);
+        console.log(offset);
     }
     
     const errorMessage = error ? <ErrorMessage/> : null;
