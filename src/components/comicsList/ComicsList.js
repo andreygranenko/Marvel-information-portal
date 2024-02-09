@@ -5,12 +5,27 @@ import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import {Link} from "react-router-dom";
 
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+        case 'confirmed':
+            return <Component/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
+
 const ComicsList = () => {
     const [comics, setComics] = useState([]);
     const [newItemLoading, setItemLoad] = useState(false);
     const [offset, setOffset] = useState(50);
     const [comicsEnded, setComicsEnd] = useState(false);
-    const {loading, error, getAllComics} = useMarvelService();
+    const {getAllComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -20,6 +35,7 @@ const ComicsList = () => {
         initial ? setItemLoad(false) : setItemLoad(true);
         getAllComics(offset)
             .then(loadAllComics)
+            .then(() => setProcess('confirmed'));
     }
 
     const loadAllComics = res => {
@@ -47,18 +63,15 @@ const ComicsList = () => {
         setComicsEnd(ended);
         console.log(offset);
     }
-    
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
-    console.log('test');
+
     return (
         <div className="comics__list">
-            {spinner}
-            <ul className="comics__grid">
-                {comics.map(item => item)}
-                {errorMessage}
+                {setContent(process, () => (
+                  <ul className="comics__grid">
+                      {comics.map(item => item)}
+                  </ul>
+                ), newItemLoading)}
 
-            </ul>
             <button className="button button__main button__long"
                 disabled={newItemLoading}
                 style={{display: comicsEnded ? 'none' : 'block'}}

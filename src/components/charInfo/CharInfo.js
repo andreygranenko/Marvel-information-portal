@@ -1,16 +1,12 @@
 import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-
-import Spinner from "../spinner/Spinner";
-import ErrorMessage from "../errorMessage/ErrorMessage";
-import Skeleton from "../skeleton/Skeleton";
 import './charInfo.scss';
 import useMarvelService from "../../services/MarvelService";
-import {CSSTransition, TransitionGroup} from "react-transition-group";
+import setContent from "../../utils/setContent";
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacter, clearError} = useMarvelService();
+    const {getCharacter, clearError, process, setProcess} = useMarvelService();
     const [ini, setIn] = useState(true);
 
     useEffect(() => {
@@ -31,6 +27,7 @@ const CharInfo = (props) => {
         clearError();
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'));
     }
     const onCharLoaded = (char) => {
         setChar(char);
@@ -39,26 +36,18 @@ const CharInfo = (props) => {
 
 
 
-    const skeleton = char || loading || error ? null : <Skeleton/>
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View ini={ini} char={char}/> : null;
     return (
-
             <div className="char__info">
-                    {skeleton}
-                    {content}
-                    {errorMessage}
-                    {spinner}
+                    {setContent(process, View, char)}
             </div>
     )
 
 }
 
-const View = ({char, ini}) => {
+const View = ({data}) => {
     const {onImageNotFound} = useMarvelService();
-    const {name, description, thumbnail, homepage, wiki, comics} = char;
-    const imgStyle = onImageNotFound(char);
+    const {name, description, thumbnail, homepage, wiki, comics} = data;
+    const imgStyle = onImageNotFound(data);
     const newComics = (comics && comics.length > 10) ? comics.slice(0, 10) : ['There are no comics for character'];
     return (
             <div >

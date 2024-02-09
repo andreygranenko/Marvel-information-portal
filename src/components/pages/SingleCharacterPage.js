@@ -3,15 +3,14 @@ import './singleCharacterPage.sass';
 
 import {useEffect, useState} from "react";
 import useMarvelService from "../../services/MarvelService";
-import Spinner from "../spinner/Spinner";
-import ErrorMessage from "../errorMessage/ErrorMessage";
 import AppBanner from "../appBanner/AppBanner";
 import {Helmet} from "react-helmet";
+import setContent from "../../utils/setContent";
 
 const SingleCharacterPage = () => {
   const {charId} = useParams();
   const [character, setCharacter] = useState(null);
-  const {loading, error, getCharacter, clearError} = useMarvelService();
+  const {getCharacter, clearError, process, setProcess} = useMarvelService();
 
   useEffect(() => {
     updateChar();
@@ -21,26 +20,22 @@ const SingleCharacterPage = () => {
     clearError();
     getCharacter(charId)
       .then(onComicLoaded)
+      .then(() => setProcess('confirmed'));
   }
   const onComicLoaded = (char) => {
     setCharacter(char);
   }
 
-  const errorMessage = error ? <ErrorMessage/> : null;
-  const spinner = loading ? <Spinner/> : null;
-  const content = !(loading || error || !character) ? <View character={character}/> : null;
 
   return (
     <>
-      {errorMessage}
-      {spinner}
-      {content}
+      {setContent(process, View, character)}
     </>
   );
 }
 
-const View = ({character}) => {
-  const {name, description, thumbnail} = character;
+const View = ({data}) => {
+  const {name, description, thumbnail} = data;
   return (
     <>
       <Helmet>

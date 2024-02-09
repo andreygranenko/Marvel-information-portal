@@ -8,6 +8,21 @@ import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+        case 'confirmed':
+            return <Component/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
+
 const CharList = (props) => {
 
     const propTypes = {
@@ -23,7 +38,7 @@ const CharList = (props) => {
     const [charEnded, setCharEnd] = useState(false);
 
 
-    const {loading, error, getAllCharacters, onImageNotFound} = useMarvelService();
+    const {getAllCharacters, onImageNotFound, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -33,6 +48,7 @@ const CharList = (props) => {
         initial ? setItemLoad(false) : setItemLoad(true);
         getAllCharacters(offset)
             .then(loadAllChar)
+            .then(() => setProcess('confirmed'));
     }
 
 
@@ -85,22 +101,24 @@ const CharList = (props) => {
         setCharEnd(ended);
     }
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading  && !newItemLoading ? <Spinner/> : null;
+    // const items = (
+    //
+    // )
         return (
             <div className="char__list">
-                {errorMessage}
-                {spinner}
-                <TransitionGroup component={'ul'} className={"char__grid"}>
-                    {characters.map((item, i) => (
+                {setContent(process, () => (
+                  <TransitionGroup component={'ul'} className={"char__grid"}>
+                      {characters.map((item, i) => (
                         <CSSTransition
-                            classNames={'char__item'}
-                            timeout={300}
-                            key={i}>
+                          classNames={'char__item'}
+                          timeout={300}
+                          key={i}>
                             {item}
                         </CSSTransition>
-                    ))}
-                </TransitionGroup>
+                      ))}
+                  </TransitionGroup>
+                ), newItemLoading )}
+
                 {/*<ul className="char__grid">*/}
 
                 {/*</ul>*/}

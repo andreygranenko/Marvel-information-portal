@@ -5,7 +5,22 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import useMarvelService from "../../services/MarvelService";
+import Skeleton from "../skeleton/Skeleton";
 
+const setContent = (process, Component, data, imgStyle, stringLenCheck) => {
+    switch (process) {
+        case 'waiting':
+            return <Skeleton/>;
+        case 'loading':
+            return <Spinner/>;
+        case 'confirmed':
+            return <Component data={data} imgStyle={imgStyle} stringLenCheck={stringLenCheck}/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
 const RandomChar = () => {
     const [char, setChar] = useState(null);
 
@@ -15,7 +30,7 @@ const RandomChar = () => {
     }, []);
 
 
-    const {loading, error, getCharacter, onImageNotFound, clearError} = useMarvelService();
+    const {getCharacter, onImageNotFound, clearError, process, setProcess} = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);
@@ -29,6 +44,7 @@ const RandomChar = () => {
         // console.log(id);
         getCharacter(id)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'));
     }
 
 
@@ -39,15 +55,12 @@ const RandomChar = () => {
     }
 
     const imgStyle = char ? onImageNotFound(char) : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) && char ? <View char={char} imgStyle={imgStyle} stringLenCheck={stringLenCheck}/> : null;
+
+
 
     return (
         <div className="randomchar">
-            {errorMessage}
-            {spinner}
-            {content}
+            {setContent(process, View, char, imgStyle, stringLenCheck)}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -66,8 +79,8 @@ const RandomChar = () => {
 
 }
 
-const View = ({char, imgStyle, stringLenCheck}) => {
-    const {name, description, thumbnail, homepage, wiki} = char;
+const View = ({data, imgStyle, stringLenCheck}) => {
+    const {name, description, thumbnail, homepage, wiki} = data;
     return (
         <div className="randomchar__block">
             <img style={imgStyle} src={thumbnail} alt="Random character" className="randomchar__img"/>
