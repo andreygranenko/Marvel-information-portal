@@ -3,6 +3,22 @@ import './charSearch.sass';
 import useMarvelService from "../../services/MarvelService";
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import Loader from "../loader/Loader";
+
+const setContent = (process, content, ErrorComponent) => {
+  switch (process) {
+    case 'waiting':
+      return null;
+    case 'loading':
+      return <Loader/>;
+    case 'confirmed':
+      return content;
+    case 'error':
+      return <ErrorComponent/>;
+    default:
+      throw new Error('Unexpected process state');
+  }
+}
 
 const validate = values => {
   const errors = {};
@@ -16,14 +32,16 @@ const validate = values => {
 
 const CharSearch = () => {
   const [char, setChar ] = useState(null);
-  const {getCharacterByName} = useMarvelService();
+  const {getCharacterByName, process, setProcess} = useMarvelService();
   const loadCharacter = name => {
     getCharacterByName(name)
       .then(charContent)
+      .then(() => setProcess('confirmed'))
       .catch(handleError)
   }
 
   const charContent = res => {
+    console.log('fetching');
     setChar(
       <div className={'found'}>
         There is! Visit {res.name} page?
@@ -35,6 +53,7 @@ const CharSearch = () => {
   }
 
   const handleError = (res) => {
+    setProcess('error');
     setChar(
       <div className="not_found">
         The character was not found. Check the name and try again
@@ -57,10 +76,16 @@ const CharSearch = () => {
             className={'input'}
             placeholder={'Enter name'}
           />
-          <button type={'submit'}>Find</button>
+          <button disabled={process === 'loading'} type={'submit'}>Find</button>
           <ErrorMessage className={'not_found'} name={'name'} component={'div'}/>
         </Form>
-        {char}
+        {setContent(process, char, () => {
+          return (
+            <div className="not_found">
+              The character was not found. Check the name and try again
+            </div>
+          )
+        })}
       </div>
     </Formik>
 
