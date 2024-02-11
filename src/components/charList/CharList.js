@@ -1,5 +1,5 @@
 import './charList.scss';
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useMemo} from "react";
 import PropTypes from "prop-types";
 
 
@@ -101,23 +101,23 @@ const CharList = (props) => {
         setCharEnd(ended);
     }
 
-    // const items = (
-    //
-    // )
+        const elements = useMemo(() => {
+            return setContent(process, () => (
+              <TransitionGroup component={'ul'} className={"char__grid"}>
+                  {characters.map((item, i) => (
+                    <CSSTransition
+                      classNames={'char__item'}
+                      timeout={300}
+                      key={i}>
+                        {item}
+                    </CSSTransition>
+                  ))}
+              </TransitionGroup>
+            ), newItemLoading);
+        }, [process]);
         return (
             <div className="char__list">
-                {setContent(process, () => (
-                  <TransitionGroup component={'ul'} className={"char__grid"}>
-                      {characters.map((item, i) => (
-                        <CSSTransition
-                          classNames={'char__item'}
-                          timeout={300}
-                          key={i}>
-                            {item}
-                        </CSSTransition>
-                      ))}
-                  </TransitionGroup>
-                ), newItemLoading )}
+                {elements}
 
                 {/*<ul className="char__grid">*/}
 
