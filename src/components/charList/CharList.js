@@ -1,5 +1,5 @@
 import './charList.scss';
-import {useState, useEffect, useRef, useMemo} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import PropTypes from "prop-types";
 
 
